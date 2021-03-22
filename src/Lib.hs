@@ -1,12 +1,18 @@
 module Lib where
 
-import System.Random ( getStdGen, randomRs )
-import Math.NumberTheory.Primes.Testing (isPrime)
+import System.Random ( randomRIO )
+import Math.NumberTheory.Primes.Testing ( isPrime )
+
+untilJust :: Monad m => m (Maybe a) -> m a
+untilJust m = go
+    where go = m >>= maybe go return
 
 genPrime :: Int -> IO Integer
 genPrime bits = do
-        g <- getStdGen
-        let nums = randomRs (min, max) g
-        return $ head $ filter isPrime nums
+        untilJust $ do
+            n <- randomRIO (min, max)
+            return $ if isPrime n
+               then Just n
+               else Nothing
     where min = 2^bits + 1
           max = 2^(bits + 1) - 1
