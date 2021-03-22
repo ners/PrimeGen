@@ -1,4 +1,4 @@
-module Lib where
+module Prime ( genPrime ) where
 
 import System.Random ( randomRIO )
 import Math.NumberTheory.Primes.Testing ( isPrime )
