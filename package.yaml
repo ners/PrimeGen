@@ -26,6 +26,7 @@ dependencies:
 - text
 - utf8-string
 - wai
+- wai-extra
 - warp
 
 library:

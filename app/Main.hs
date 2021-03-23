@@ -12,13 +12,14 @@ import Network.HTTP.Types ( status200, status404 )
 import Network.HTTP.Types.Header ( hContentType )
 import Network.Wai ( responseLBS, pathInfo, Application )
 import Network.Wai.Handler.Warp ( run )
+import Network.Wai.Middleware.RequestLogger ( logStdout )
 import Text.Read ( readMaybe )
 
 main :: IO ()
 main = do
     let port = 3000
     putStrLn $ "Listening on port " ++ show port
-    run port app
+    run port $ logStdout app
 
 app :: Application
 app req f = if length bits /= length parts
