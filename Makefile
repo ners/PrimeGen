@@ -6,8 +6,6 @@ build:
 exec: build
 	stack exec -- PrimeGen-exe
 
-NEED_IMAGE = $(shell podman image exists ${IMAGE_NAME} || echo image)
-NEED_CONTAINER = $(shell podman container start ${CONTAINER_NAME} || echo container)
 
 IMAGE_NAME := primegen
 image: build
@@ -16,7 +14,8 @@ image: build
 		.
 
 CONTAINER_NAME := primegen
-container: image
+NEED_IMAGE = $(shell podman image exists ${IMAGE_NAME} || echo image)
+container: ${NEED_IMAGE}
 	podman run \
 		--name ${CONTAINER_NAME} \
 		--rm \
@@ -24,7 +23,8 @@ container: image
 		-p 3000:3000 \
 		${IMAGE_NAME}
 
-shell: container
+NEED_CONTAINER = $(shell podman container start ${CONTAINER_NAME} || echo container)
+shell: ${NEED_CONTAINER}
 	podman exec -it ${CONTAINER_NAME} bash -i
 
 .PHONY: all build exec image container
